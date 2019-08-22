@@ -1,17 +1,15 @@
+<!doctype html>
 <html>
     <head>
-        <title>Flask-Chess</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='chessboard-1.0.0.min.css') }}">
+        <title>Flask Chess</title>
     </head>
     <body>
-        <div id="gameBoard" style="width: 420px;"></div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="{{ url_for('static', filename='chess.js') }}"></script>
-        <script src="{{ url_for('static', filename='chessboard-1.0.0.js') }}"></script>
-        <script src="{{ url_for('static', filename='myGame.js') }}"></script>
-
-        <script>
-            // var board = Chessboard('gameBoard');
-        </script>
+        <h3>Flask Chess: Start or Join a Game</h3>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            {{ form.name.label }}: {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+            {{ form.room.label }}: {{ form.room() }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
+            {{ form.submit() }}
+        </form>
     </body>
 </html>
