@@ -6,10 +6,15 @@ from .. import socketio
 def joined(message):
     room = session.get('room')
     join_room(room)
-    emit('joined', {'msg': session.get('name') + ' has entered the game.'}, room=room)
+    emit('joined', {'msg': session.get('name') + ' has entered the game.'}, broadcast=True, room=room)
 
 @socketio.on('move', namespace='/game')
 def handle_move(move):
     room = session.get('room')
     print(move)
     emit('move', move, broadcast=True, room=room)
+
+@socketio.on('test', namespace='/game')
+def tester(message):
+    print(message)
+    emit('test', {'msg': "This is only a test"}, broadcast=True, room=room)

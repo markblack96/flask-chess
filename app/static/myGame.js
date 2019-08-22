@@ -1,15 +1,11 @@
 // Yeah, bad name for the file.
-var socket = io();
-var serverGame;
-
-socket.on('joingame', function(msg) {
-    init(msg.game);
-});
+var socket;
 
 var init = function (serverGameState) {
-    serverGame = serverGameState;
+    socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
         socket.emit('joined', {});
+        console.log('Confirmed connection'); // This one works???
     });
     var config = {
         draggable: true,
@@ -17,23 +13,33 @@ var init = function (serverGameState) {
         onDrop: onDrop,
     };
 
+
+    socket.on('joined', function(msg) {
+        console.log(msg);
+        $('body').append('<p>Player joined</p><br><p>' + msg['msg'] +'</p>');
+    });
+// handles moves from opponent
+    socket.on('move', function(msg) {
+        // game.move(msg);
+        board.position(game.fen()); // fen is the board's layout
+        console.log(msg);
+    });
+
+    socket.on('test', function(msg) {
+        console.log(msg);
+    });
+
     board = new Chessboard('gameBoard', config);
     game = new Chess();
-
-    // handles moves from opponent
-    socket.on('move', function(msg) {
-        game.move(msg);
-        board.position(game.fen()); // where fen is the board's layout
-    });
 };
 
 var onDrop = function(source, target) {
     var move = game.move({from: source, to: target, promotion: 'q'});
+    var fen = game.fen();
     if (move == null) {
         return 'snapback';
     } else {
-        socket.emit('move', {move: move, gameId: serverGame.id, board: game.fen()});
+        socket.emit('move', fen);//  move);
     }
 };
-
 $(document).ready(init);
