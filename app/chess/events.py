@@ -6,7 +6,7 @@ from .. import socketio
 def joined(message):
     room = session.get('room')
     join_room(room)
-    emit('joined', {'msg': session.get('name') + ' has entered the game.'}, broadcast=True, room=room)
+    emit('joined', {'msg': session.get('name') + ' has entered the game.', 'name': session.get('name'), 'color': session.get('color'), 'room': room}, broadcast=True, room=room)
 
 @socketio.on('move', namespace='/game')
 def handle_move(move):
@@ -17,4 +17,5 @@ def handle_move(move):
 @socketio.on('test', namespace='/game')
 def tester(message):
     print(message)
+    room = session.get('room')
     emit('test', {'msg': "This is only a test"}, broadcast=True, room=room)

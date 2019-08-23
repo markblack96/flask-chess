@@ -8,6 +8,7 @@ def index():
     if form.validate_on_submit():
         session['name'] = form.name.data
         session['room'] = form.room.data
+        session['color'] = form.color.data
         return redirect(url_for('.game'))
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
@@ -18,6 +19,7 @@ def index():
 def game():
     name = session.get('name', '')
     room = session.get('room', '')
+    color = session.get('color', '')
     if name == '' or room == '':
         return redirect(url_for('.index'))
     return render_template('game.html', name=name, room=room)
