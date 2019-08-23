@@ -2,7 +2,7 @@
 var socket;
 
 var init = function (serverGameState) {
-    socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+    socket = io.connect('http://' + document.domain + ':' + location.port + '/game');
     socket.on('connect', function() {
         socket.emit('joined', {});
         console.log('Confirmed connection'); // This one works???
@@ -20,7 +20,7 @@ var init = function (serverGameState) {
     });
 // handles moves from opponent
     socket.on('move', function(msg) {
-        // game.move(msg);
+        game.move(msg);
         board.position(game.fen()); // fen is the board's layout
         console.log(msg);
     });
@@ -35,11 +35,11 @@ var init = function (serverGameState) {
 
 var onDrop = function(source, target) {
     var move = game.move({from: source, to: target, promotion: 'q'});
-    var fen = game.fen();
     if (move == null) {
         return 'snapback';
     } else {
-        socket.emit('move', fen);//  move);
+        socket.emit('move', move);
+	// board = game.fen()
     }
 };
 $(document).ready(init);
