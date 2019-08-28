@@ -5,30 +5,32 @@ var playersInRoom = [];
 var roomName;
 var username, playerColor;
 
-var init = function (serverGameState) {
+var init = function () {
     socket = io.connect('http://' + document.domain + ':' + location.port + '/game');
     socket.on('connect', function() {
         // player first connects here, let's assign information
         socket.emit('joined', {});
     });
-    var config = {
-        draggable: true,
-        position: 'start',
-        onDrop: onDrop,
-        onDragStart: onDragStart,
-        orientation: playerColor
-    };
 
     socket.on('joined', function(msg) {
+        username = msg.name;
+        playerColor = msg.color;
+        var config = {
+            draggable: true,
+            position: msg.gameState != '' ? msg.gameState : 'start', //'start',
+            onDrop: onDrop,
+            onDragStart: onDragStart,
+            orientation: playerColor
+        };
+        board = new Chessboard('gameBoard', config);
+        game = new Chess();
         console.log(msg);
         $('body').append('<p>Player joined</p><br><p>' + msg['msg'] +'</p>');
         // msg needs to include username and color
-        username = msg.name;
-        playerColor = msg.color;
         playersInRoom.push({'player': username, 'color': playerColor});
         fen = msg.gameState;
         board.position(fen);
-        console.log(msg.gameState);
+        console.log('From joined event' + msg.gameState);
     });
 // handles moves from opponent
     socket.on('move', function(msg) {
@@ -41,8 +43,6 @@ var init = function (serverGameState) {
         console.log(msg);
     });
 
-    board = new Chessboard('gameBoard', config);
-    game = new Chess();
 };
 
 var onDrop = function(source, target) {

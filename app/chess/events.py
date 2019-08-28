@@ -19,9 +19,9 @@ def joined(message):
 def handle_move(move):
     room = session.get('room')
     print(move)
+    emit('move', move['move'], broadcast=True, room=room)
     game = next(g for g in games if g['room'] == room)
     game['board'] = move['fen']
-    emit('move', move['move'], broadcast=True, room=room)
 
 @socketio.on('test', namespace='/game')
 def tester(message):
