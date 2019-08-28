@@ -1,5 +1,5 @@
 from flask import render_template, url_for, session, redirect, request
-from . import chess
+from . import chess, games
 from .forms import LoginForm
 
 @chess.route('/', methods=['GET', 'POST'])
@@ -13,7 +13,7 @@ def index():
     elif request.method == 'GET':
         form.name.data = session.get('name', '')
         form.room.data = session.get('room', '')
-    return render_template("index.html", form=form) 
+    return render_template("index.html", form=form, games=games) 
 
 @chess.route('/game')
 def game():

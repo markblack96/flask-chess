@@ -1,5 +1,7 @@
 from flask import Blueprint
 
+players = []
+games = []
 
 chess = Blueprint('chess', __name__)
 

@@ -12,5 +12,10 @@
             {{ form.color.label }}: {{ form.color() }} {% for error in form.color.errors %} {{ error }} {% endfor %} </br>
             {{ form.submit() }}
         </form>
+        <div id="games">
+            {% for game in games %}
+            <p>{{ game }}</p>
+            {% endfor %}
+        </div>
     </body>
 </html>
