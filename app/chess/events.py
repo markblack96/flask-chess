@@ -13,7 +13,12 @@ def joined(message):
     print(players)
     print(games)
     game_state = next(g for g in games if g['room'] == room)
-    emit('joined', {'msg': session.get('name') + ' has entered the game.', 'name': session.get('name'), 'color': session.get('color'), 'room': room, 'gameState': game_state['board']}, broadcast=True, room=room)
+    game = {
+            'id': room,
+            'board': game_state['board'],
+            }
+    # emit('joined', {'msg': session.get('name') + ' has entered the game.', 'name': session.get('name'), 'color': session.get('color'), 'room': room, 'board': game_state['board']}, broadcast=True, room=room)
+    emit('joined', {'game': game, 'color': session.get('color'), 'name': session.get('name')}, broadcast=True, room=room)
 
 @socketio.on('move', namespace='/game')
 def handle_move(move):
@@ -23,8 +28,3 @@ def handle_move(move):
     game = next(g for g in games if g['room'] == room)
     game['board'] = move['fen']
 
-@socketio.on('test', namespace='/game')
-def tester(message):
-    print(message)
-    room = session.get('room')
-    emit('test', {'msg': "This is only a test"}, broadcast=True, room=room)
