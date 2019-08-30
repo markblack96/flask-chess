@@ -39,9 +39,10 @@ var init = function (serverGameState) {
 };
 
 socket.on('move', function(msg) {
-    game.move(msg.move);
-    board.position(game.fen()); // fen is the board's layout
-    console.log(msg);
+    if (severGame && msg.room == serverGame.room) {
+        game.move(msg.move)
+        board.position(game.fen())
+    }
 });
 var onDrop = function(source, target) {
     var move = game.move({from: source, to: target, promotion: 'q'});
