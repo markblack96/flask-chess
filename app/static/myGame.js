@@ -1,4 +1,5 @@
 // Yeah, bad name for the file.
+(function() {
 var socket;
 var serverGame;
 var playersInRoom = [];
@@ -16,8 +17,8 @@ socket.on('connect', function() {
 // then, we get a joined event in return
 socket.on('joined', function(msg) {
     // fire off init here?
-    serverGameState = msg.game;
     playerColor = msg.color;
+    serverGameState = msg.game;
     init(serverGameState);
     $('body').append('<p>' + msg['msg'] +'</p>');
 });
@@ -39,9 +40,10 @@ var init = function (serverGameState) {
 };
 
 socket.on('move', function(msg) {
-    if (severGame && msg.room == serverGame.room) {
-        game.move(msg.move)
-        board.position(game.fen())
+    if (serverGameState && msg.room == serverGameState.id) {
+        game.move(msg.move);
+        board.position(game.fen());
+        serverGameState = msg.game;
     }
 });
 var onDrop = function(source, target) {
@@ -49,7 +51,7 @@ var onDrop = function(source, target) {
     if (move == null) {
         return 'snapback';
     } else {
-        socket.emit('move', {'move': move, 'fen': game.fen()});
+        socket.emit('move', {move: move, board: game.fen()});
 	// board = game.fen()
     }
 };
@@ -64,5 +66,5 @@ var onDragStart = function(source, piece, position, orientation) {
 };
 var onSnapEnd = function() {
     board.position(game.fen());
-};
-$(document).ready(init);
+}
+})();

@@ -38,14 +38,15 @@ def joined(message):
     emit('joined', {'game': game,
         'color': session.get('color'),
         'name': session.get('name'),
-        'msg': session.get('name') + ' has entered the game.'},
-        broadcast=True, room=room)
+        'msg': session.get('name') + ' has entered the game.'}
+        )
 
 @socketio.on('move', namespace='/game')
 def handle_move(move):
     room = session.get('room')
     print(move)
-    emit('move', {'room': room, 'move': move['move']}, broadcast=True, room=room)
+    game_state = next(g for g in games if g['room'] == room)
+    emit('move', {'room': room, 'move': move['move'], 'game': {'id': room, 'board': game_state['board']}}, broadcast=True, room=room)
     game = next(g for g in games if g['room'] == room)
-    game['board'] = move['fen']
+    game['board'] = move['board']
 
