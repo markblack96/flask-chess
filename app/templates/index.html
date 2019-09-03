@@ -2,20 +2,38 @@
 <html>
     <head>
         <title>Flask Chess</title>
+        <link rel="stylesheet" href="https://unpkg.com/teutonic-css@0.7.7/teutonic.min.css">
     </head>
     <body>
-        <h3>Flask Chess: Start or Join a Game</h3>
-        <form method="POST">
-            {{ form.hidden_tag() }}
-            {{ form.name.label }}: {{ form.name() }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
-            {{ form.room.label }}: {{ form.room() }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
-            {{ form.color.label }}: {{ form.color() }} {% for error in form.color.errors %} {{ error }} {% endfor %} </br>
-            {{ form.submit() }}
-        </form>
-        <div id="games">
-            {% for game in games %}
-            <p>{{ game }}</p>
-            {% endfor %}
+        <div class="grid">
+        <div class="flex start-6 end-8 gap_s read_s justify-center">
+            <h3>Start or Join a Game</h3>
+            <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <h4>{{ form.name.label }}:</h4> {{ form.name(class_="input") }} {% for error in form.name.errors %}{{ error }}{% endfor %}<br>
+                    <h4>{{ form.room.label }}:</h4> {{ form.room(class_="input") }} {% for error in form.room.errors %}{{ error }}{% endfor %}<br>
+                    <h4>{{ form.color.label }}:</h4>
+                    <div class="grid-auto gap-no">
+                    {% for subfield in form.color %}
+                        <div class="box">
+                        {{ subfield.label }}
+                        {{ subfield(class="radio") }}
+                        </div>
+                    {% endfor %}
+                    <br>
+                    {{ form.submit(class="button span-12") }}
+                    </div>
+                    <br>
+                    <div class="span-auto">
+                    {% for error in form.color.errors %} {{ error }} {% endfor %}
+                    </div>
+            </form>
+            <div id="games">
+                {% for game in games %}
+                <p>{{ game }}</p>
+                {% endfor %}
+            </div>
+        </div>
         </div>
     </body>
 </html>

@@ -37,9 +37,10 @@ def joined(message):
     # emit('joined', {'msg': session.get('name') + ' has entered the game.', 'name': session.get('name'), 'color': session.get('color'), 'room': room, 'board': game_state['board']}, broadcast=True, room=room)
     emit('joined', {'game': game,
         'color': session.get('color'),
-        'name': session.get('name'),
-        'msg': session.get('name') + ' has entered the game.'}
+        'name': session.get('name')}# ,
+        # 'msg': session.get('name') + ' has entered the game.'} # todo: separate the msg so we can broadcast it
         )
+    emit('join_message', '{} has joined the game.'.format(session.get('name')), broadcast=True, room=room) 
 
 @socketio.on('move', namespace='/game')
 def handle_move(move):

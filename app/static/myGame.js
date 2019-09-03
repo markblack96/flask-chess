@@ -20,7 +20,11 @@ socket.on('joined', function(msg) {
     playerColor = msg.color;
     serverGameState = msg.game;
     init(serverGameState);
-    $('body').append('<p>' + msg['msg'] +'</p>');
+    // $('body').append('<p>' + msg['msg'] +'</p>');
+});
+
+socket.on('join_message', function(msg) {
+    $('body').append('<p>' + msg + '</p>');
 });
 
 var init = function (serverGameState) {
