@@ -24,7 +24,7 @@ socket.on('joined', function(msg) {
 });
 
 socket.on('join_message', function(msg) {
-    $('body').append('<p>' + msg + '</p>');
+    $('#chat').append('<p>' + msg + '</p>');
 });
 
 var init = function (serverGameState) {
